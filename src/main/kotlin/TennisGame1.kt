@@ -14,8 +14,8 @@ class TennisGame1(player1Name: String, player2Name: String) : TennisGame {
         else -> scoreString()
     }
 
-    private fun playerWith(name: String) = listOf(player1, player2)
-        .first() { it.name == name }
+
+    private fun playerWith(name: String) = mapOf(player1.name to player1, player2.name to player2)[name]!!
 
     private fun isTie() = player1.points == player2.points
 
