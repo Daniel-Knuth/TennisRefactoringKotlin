@@ -8,7 +8,8 @@ class TennisGame1(serverName: String, receiverName: String) : TennisGame {
     }
 
     override fun getScore(): String {
-
+        val provider = DeuceNew(this)
+            .check(GameServerNew(this))
         val result: TennisResult = Deuce(
             this, GameServer(
                 this, GameReceiver(
@@ -22,6 +23,9 @@ class TennisGame1(serverName: String, receiverName: String) : TennisGame {
         ).result
         return result.format()
     }
+
+    internal fun wasWon() = receiverHasWon() || serverHasWon()
+    internal fun winner() = if (serverHasWon()) server else if(receiverHasWon()) receiver else null
 
     internal fun receiverHasAdvantage() = receiver.hasAdvantageOver(server)
 
@@ -88,10 +92,21 @@ internal class Deuce(private val game: TennisGame1, private val nextResult: Resu
 
 }
 
+internal class GameServerNew(private val game: TennisGame1) : ResultProvider {
+    override val result: TennisResult
+        get() = if (game.serverHasWon()) TennisResult("Win for " + game.server.name, "") else TennisResult("", "")
+
+}
 
 internal class GameServer(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
     override val result: TennisResult
         get() = if (game.serverHasWon()) TennisResult("Win for " + game.server.name, "") else nextResult.result
+
+}
+
+internal class GameWon(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
+    override val result: TennisResult
+        get() = if (game.wasWon()) TennisResult("Win for " + game.winner()!!.name, "") else nextResult.result
 
 }
 
