@@ -61,16 +61,22 @@ internal class TennisResultNew(private val game: TennisGame1) {
     }
 }
 
-internal interface ResultProviderNew {
-    val result: String
-    fun check(nextProvider: ResultProviderNew): ResultProviderNew =
-        if (result.isBlank()) nextProvider else this
-}
-
-
 internal interface ResultProvider {
     val result: TennisResult
     fun or(nextProvider: ResultProvider): ResultProvider
+}
+
+internal interface ResultProviderNew {
+    val result: TennisResult
+    fun or(nextProvider: ((TennisGame) -> ResultProviderNew)): ResultProviderNew
+}
+
+internal class DeuceNew(private val game: TennisGame1) : ResultProviderNew {
+    override val result: TennisResult
+        get() = if (game.isDeuce()) TennisResult("Deuce", "") else TennisResult("", "")
+
+    override fun or(nextProvider: ((TennisGame) -> ResultProviderNew)): ResultProviderNew =
+        if (result.format().isBlank()) nextProvider.invoke(game) else this
 }
 
 
@@ -89,7 +95,6 @@ internal class GameWon(private val game: TennisGame1) : ResultProvider {
     override fun or(nextProvider: ResultProvider): ResultProvider =
         if (result.format().isBlank()) nextProvider else this
 }
-
 
 
 internal class Advantage(private val game: TennisGame1) : ResultProvider {
