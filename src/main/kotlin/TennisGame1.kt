@@ -12,8 +12,6 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
         isTie() -> pointsToTieString(player1.points)
         hasWinner() -> "Win for ${winner()?.name}"
         hasAdvantageOwner() -> "Advantage ${advantageOwner()?.name}"
-        player1.hasAdvantageOver(player2) -> "Advantage player1"
-        player2.hasAdvantageOver(player1) -> "Advantage player2"
         else -> "${pointsToString(player1.points)}-${pointsToString(player2.points)}"
     }
 
