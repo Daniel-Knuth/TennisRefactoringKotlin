@@ -1,4 +1,4 @@
-class TennisGame1(val serverName: String, val receiverName: String) : TennisGame {
+class TennisGame1(serverName: String, receiverName: String) : TennisGame {
 
     internal val server = Player(serverName)
     internal val receiver = Player(receiverName)
@@ -23,19 +23,19 @@ class TennisGame1(val serverName: String, val receiverName: String) : TennisGame
     }
 
     internal fun receiverHasAdvantage(): Boolean {
-        return receiver.points >= 4 && receiver.points - server.points == 1
+        return receiver.hasAdvantageOver(server)
     }
 
     internal fun serverHasAdvantage(): Boolean {
-        return server.points >= 4 && server.points - receiver.points == 1
+        return server.hasAdvantageOver(receiver)
     }
 
     internal fun receiverHasWon(): Boolean {
-        return receiver.points >= 4 && receiver.points - server.points >= 2
+        return receiver.hasBeaten(server)
     }
 
     internal fun serverHasWon(): Boolean {
-        return server.points >= 4 && server.points - receiver.points >= 2
+        return server.hasBeaten(receiver)
     }
 
     internal fun isDeuce(): Boolean {
