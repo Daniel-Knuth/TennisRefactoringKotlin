@@ -25,6 +25,9 @@ class TennisGame1(serverName: String, receiverName: String) : TennisGame {
     internal fun wasWon() = receiverHasWon() || serverHasWon()
     internal fun winner() = if (serverHasWon()) server else if (receiverHasWon()) receiver else null
 
+    internal fun hasAdvantageOwner() = receiverHasAdvantage() || serverHasAdvantage()
+    internal fun advantageOwner() = if (serverHasAdvantage()) server else if (receiverHasAdvantage()) receiver else null
+
     internal fun receiverHasAdvantage() = receiver.hasAdvantageOver(server)
 
     internal fun serverHasAdvantage() = server.hasAdvantageOver(receiver)
@@ -96,11 +99,6 @@ internal class GameServerNew(private val game: TennisGame1) : ResultProvider {
 
 }
 
-internal class GameServer(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
-    override val result: TennisResult
-        get() = if (game.serverHasWon()) TennisResult("Win for " + game.server.name, "") else nextResult.result
-
-}
 
 internal class GameWon(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
     override val result: TennisResult
@@ -108,9 +106,12 @@ internal class GameWon(private val game: TennisGame1, private val nextResult: Re
 
 }
 
-internal class GameReceiver(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
+internal class Advantage(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
     override val result: TennisResult
-        get() = if (game.receiverHasWon()) TennisResult("Win for " + game.receiver.name, "") else nextResult.result
+        get() = if (game.hasAdvantageOwner()) TennisResult(
+            "Advantage " + game.advantageOwner()!!.name,
+            ""
+        ) else nextResult.result
 
 }
 
