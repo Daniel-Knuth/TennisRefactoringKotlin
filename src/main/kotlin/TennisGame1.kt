@@ -34,7 +34,7 @@ class TennisGame1(serverName: String, receiverName: String) : TennisGame {
 }
 
 
-internal class TennisResult(private var serverScore: String, private var receiverScore: String) {
+internal class TennisResult(private var serverScore: String, private var receiverScore: String="") {
     fun format(): String {
         if ("" == receiverScore) return serverScore
         return if (serverScore == receiverScore) "$serverScore-All" else "$serverScore-$receiverScore"
@@ -43,7 +43,7 @@ internal class TennisResult(private var serverScore: String, private var receive
     fun isValid() = this != invalidResult
 
     companion object {
-        val invalidResult = TennisResult("", "")
+        val invalidResult = TennisResult("")
     }
 }
 
@@ -56,14 +56,14 @@ internal interface ResultProvider {
 
 internal class Deuce(private val game: TennisGame1) : ResultProvider {
     override val result: TennisResult
-        get() = if (game.isDeuce()) TennisResult("Deuce", "") else TennisResult.invalidResult
+        get() = if (game.isDeuce()) TennisResult("Deuce") else TennisResult.invalidResult
 
     override fun providesValidResult() = result.isValid()
 }
 
 internal class GameWon(private val game: TennisGame1) : ResultProvider {
     override val result: TennisResult
-        get() = if (game.wasWon()) TennisResult("Win for " + game.winner()!!.name, "")
+        get() = if (game.wasWon()) TennisResult("Win for " + game.winner()!!.name)
         else TennisResult.invalidResult
 
     override fun providesValidResult() = result.isValid()
@@ -73,9 +73,8 @@ internal class GameWon(private val game: TennisGame1) : ResultProvider {
 internal class Advantage(private val game: TennisGame1) : ResultProvider {
     override val result: TennisResult
         get() = if (game.hasAdvantageOwner()) TennisResult(
-            "Advantage " + game.advantageOwner()!!.name,
-            ""
-        ) else TennisResult.invalidResult
+            "Advantage " + game.advantageOwner()!!.name)
+        else TennisResult.invalidResult
 
     override fun providesValidResult() = result.isValid()
 }
