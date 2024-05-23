@@ -1,5 +1,5 @@
 class Player(
-    var points: Int,
+    var points: Int=0,
     val name: String
 ) {
 }
