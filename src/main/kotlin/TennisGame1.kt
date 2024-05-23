@@ -2,6 +2,8 @@ class TennisGame1(val serverName: String, val receiverName: String) : TennisGame
 
     internal var serverScore = 0
     internal var receiverScore = 0
+    internal val server = Player(serverName)
+    internal val receiver = Player(receiverName)
 
     override fun wonPoint(playerName: String) {
         if (serverName == playerName) serverScore += 1 else receiverScore += 1
