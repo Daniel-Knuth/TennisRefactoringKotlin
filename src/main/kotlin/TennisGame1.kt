@@ -9,7 +9,7 @@ class TennisGame1(player1Name: String, player2Name: String) : TennisGame {
     }
 
     override fun getScore(): String = when {
-        isTie() -> tieString(player1.points)
+        isTie() -> tieString()
         hasWinner() -> winString()
         hasAdvantageOwner() -> advantageString()
         else -> scoreString()
@@ -17,8 +17,8 @@ class TennisGame1(player1Name: String, player2Name: String) : TennisGame {
 
     private fun isTie() = player1.points == player2.points
 
-    private fun tieString(points: Int) = when {
-        points < 3 -> "${pointsToString(points)}-All"
+    private fun tieString() = when {
+        player1.points < 3 -> "${pointsToString(player1.points)}-All"
         else -> "Deuce"
     }
 
