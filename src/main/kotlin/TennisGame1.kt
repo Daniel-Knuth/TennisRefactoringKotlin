@@ -9,10 +9,17 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
     }
 
     override fun getScore(): String = when {
-        isTie() -> pointsToTieString(player1.points)
+        isTie() -> tieString(player1.points)
         hasWinner() -> "Win for ${winner()?.name}"
         hasAdvantageOwner() -> "Advantage ${advantageOwner()?.name}"
-        else -> "${pointsToString(player1.points)}-${pointsToString(player2.points)}"
+        else -> scoreString()
+    }
+
+    private fun isTie() = player1.points == player2.points
+
+    private fun tieString(points: Int) = when {
+        points < 3 -> "${pointsToString(points)}-All"
+        else -> "Deuce"
     }
 
     private fun pointsToString(points: Int) = when (points) {
@@ -22,13 +29,6 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
         3 -> "Forty"
         else -> ""
     }
-
-    private fun pointsToTieString(points: Int) = when {
-        points < 3 -> "${pointsToString(points)}-All"
-        else -> "Deuce"
-    }
-
-    private fun isTie() = player1.points == player2.points
 
     private fun hasWinner() = winner() != null
 
@@ -45,4 +45,6 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
         player2.hasAdvantageOver(player1) -> player2
         else -> null
     }
+
+    private fun scoreString() = "${pointsToString(player1.points)}-${pointsToString(player2.points)}"
 }
