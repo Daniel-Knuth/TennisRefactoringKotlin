@@ -28,6 +28,13 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
         return scoreString
     }
 
+    fun getScoreNew(): String = when {
+        isTie() -> pointsToTieString(player1.points)
+        player1.hasWon(player2) -> "Win for player1"
+        player1.hasAdvantage(player2) -> "Advantage player1"
+        else -> ""
+    }
+
 
     private fun pointsToString(points: Int) = when (points) {
         0 -> "Love"
