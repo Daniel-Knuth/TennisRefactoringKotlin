@@ -17,7 +17,6 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
         else -> "${pointsToString(player1.points)}-${pointsToString(player2.points)}"
     }
 
-
     private fun pointsToString(points: Int) = when (points) {
         0 -> "Love"
         1 -> "Fifteen"
@@ -32,4 +31,10 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
     }
 
     private fun isTie() = player1.points == player2.points
+
+    private fun winner():Player? = if (player1.hasBeaten(player2))
+        player1
+    else if (player2.hasBeaten(player1))
+        player2
+    else null
 }
