@@ -43,7 +43,7 @@ internal class TennisResult(private var serverScore: String, private var receive
     fun isValid() = this != invalidResult
 
     companion object {
-        val invalidResult = TennisResult("")
+        val invalidResult = TennisResult("invalid","invalid")
     }
 }
 
