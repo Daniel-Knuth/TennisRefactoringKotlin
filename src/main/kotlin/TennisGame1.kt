@@ -6,7 +6,7 @@ class TennisGame1(val serverName: String, val receiverName: String) : TennisGame
     internal val receiver = Player(receiverName)
 
     override fun wonPoint(playerName: String) {
-        if (serverName == playerName) serverScore += 1 else receiverScore += 1
+        if (serverName == playerName) server.winPoint() else receiver.winPoint()
     }
 
     override fun getScore(): String {
@@ -25,23 +25,23 @@ class TennisGame1(val serverName: String, val receiverName: String) : TennisGame
     }
 
     internal fun receiverHasAdvantage(): Boolean {
-        return receiverScore >= 4 && receiverScore - serverScore == 1
+        return receiver.points >= 4 && receiver.points - server.points == 1
     }
 
     internal fun serverHasAdvantage(): Boolean {
-        return serverScore >= 4 && serverScore - receiverScore == 1
+        return server.points >= 4 && server.points - receiver.points == 1
     }
 
     internal fun receiverHasWon(): Boolean {
-        return receiverScore >= 4 && receiverScore - serverScore >= 2
+        return receiver.points >= 4 && receiver.points - server.points >= 2
     }
 
     internal fun serverHasWon(): Boolean {
-        return serverScore >= 4 && serverScore - receiverScore >= 2
+        return server.points >= 4 && server.points - receiver.points >= 2
     }
 
     internal fun isDeuce(): Boolean {
-        return serverScore >= 3 && receiverScore >= 3 && serverScore == receiverScore
+        return server.points >= 3 && receiver.points >= 3 && server.points == receiver.points
     }
 }
 
@@ -91,7 +91,7 @@ internal class AdvantageReceiver(private val game: TennisGame1, private val next
 internal class DefaultResult(private val game: TennisGame1) : ResultProvider {
     override val result: TennisResult
         get() = TennisResult(
-            scores[game.serverScore], scores[game.receiverScore]
+            scores[game.server.points], scores[game.receiver.points]
         )
 
     internal companion object {
