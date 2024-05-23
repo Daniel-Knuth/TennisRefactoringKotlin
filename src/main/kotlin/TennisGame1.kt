@@ -31,11 +31,19 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
 
     private fun isTie() = player1.points == player2.points
 
-    private fun hasWinner()=winner()!=null
+    private fun hasWinner() = winner() != null
 
     private fun winner(): Player? = when {
         (player1.hasBeaten(player2)) -> player1
         (player2.hasBeaten(player1)) -> player2
+        else -> null
+    }
+
+    private fun hasAdvantageOwner() = advantageOwner() != null
+
+    private fun advantageOwner() = when {
+        player1.hasAdvantageOver(player2) -> player1
+        player2.hasAdvantageOver(player1) -> player2
         else -> null
     }
 }
