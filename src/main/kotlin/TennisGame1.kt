@@ -71,11 +71,15 @@ internal interface ResultProviderNew {
 
 internal interface ResultProvider {
     val result: TennisResult
+    fun check(nextProvider: ResultProvider): ResultProvider =
+        if (result.format().isBlank()) nextProvider else this
 }
 
-internal class DeuceNew(private val game: TennisGame1) : ResultProviderNew {
-    override val result: String
-        get() = if (game.isDeuce()) TennisResultNew(game).format() else ""
+
+internal class DeuceNew(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
+    override val result: TennisResult
+        get() = if (game.isDeuce()) TennisResult("Deuce", "") else nextResult.result
+
 }
 
 internal class Deuce(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
@@ -83,7 +87,6 @@ internal class Deuce(private val game: TennisGame1, private val nextResult: Resu
         get() = if (game.isDeuce()) TennisResult("Deuce", "") else nextResult.result
 
 }
-
 
 
 internal class GameServer(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
