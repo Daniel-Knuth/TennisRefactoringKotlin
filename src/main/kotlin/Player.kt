@@ -4,6 +4,6 @@ class Player(
 ) {
 
     fun hasBeaten(other: Player) = this.points >= 4 && this.points - other.points >= 2
-    fun hasAdvantageOver(other: Player) = this.points >= 4 && this.points - other.points < 2
+    fun hasAdvantageOver(other: Player) = this.points >= 4 && this.points - other.points == 1
 
 }
