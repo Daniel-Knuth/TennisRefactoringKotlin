@@ -3,7 +3,7 @@ class Player(
     val name: String
 ) {
 
-    fun hasWon(other: Player) = this.points >= 4 && this.points - other.points >= 2
-    fun hasAdvantage(other: Player) = this.points >= 4 && this.points - other.points < 2
+    fun hasBeaten(other: Player) = this.points >= 4 && this.points - other.points >= 2
+    fun hasAdvantageOver(other: Player) = this.points >= 4 && this.points - other.points < 2
 
 }
