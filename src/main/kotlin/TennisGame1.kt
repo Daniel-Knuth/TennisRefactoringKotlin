@@ -14,7 +14,7 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
         var scoreString = ""
         var tempScore = 0
         if (isTie()) {
-            scoreString = pointsToDrawString(scorePlayer1)
+            scoreString = pointsToTieString(scorePlayer1)
         } else if (scorePlayer1 >= 4 || scorePLayer2 >= 4) {
             val minusResult = scorePlayer1 - scorePLayer2
             scoreString = if (minusResult == 1)
@@ -26,20 +26,7 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
             else
                 "Win for player2"
         } else {
-            for (i in 1..2) {
-                if (i == 1)
-                    tempScore = scorePlayer1
-                else {
-                    scoreString += "-"
-                    tempScore = scorePLayer2
-                }
-                when (tempScore) {
-                    0 -> scoreString += "Love"
-                    1 -> scoreString += "Fifteen"
-                    2 -> scoreString += "Thirty"
-                    3 -> scoreString += "Forty"
-                }
-            }
+            scoreString="${pointsToString(scorePlayer1)}-${pointsToString(scorePLayer2)}"
         }
         return scoreString
     }
@@ -53,7 +40,7 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
     }
 
 
-    private fun pointsToDrawString(points: Int) = when {
+    private fun pointsToTieString(points: Int) = when {
         points < 3 -> "${pointsToString(points)}-All"
         else -> "Deuce"
     }
