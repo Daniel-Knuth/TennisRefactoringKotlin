@@ -54,7 +54,7 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
 
 
     private fun pointsToDrawString(points: Int) = when {
-        points < 3 -> pointsToString(points) + "-All"
+        points < 3 -> "${pointsToString(points)}-All"
         else -> "Deuce"
     }
 
