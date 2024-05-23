@@ -1,10 +1,10 @@
-class TennisGame1(val server: String, val receiver: String) : TennisGame {
+class TennisGame1(val serverName: String, val receiverName: String) : TennisGame {
 
     internal var serverScore = 0
     internal var receiverScore = 0
 
     override fun wonPoint(playerName: String) {
-        if (server == playerName) serverScore += 1 else receiverScore += 1
+        if (serverName == playerName) serverScore += 1 else receiverScore += 1
     }
 
     override fun getScore(): String {
@@ -63,26 +63,26 @@ internal class Deuce(private val game: TennisGame1, private val nextResult: Resu
 
 internal class GameServer(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
     override val result: TennisResult
-        get() = if (game.serverHasWon()) TennisResult("Win for " + game.server, "") else nextResult.result
+        get() = if (game.serverHasWon()) TennisResult("Win for " + game.serverName, "") else nextResult.result
 
 }
 
 internal class GameReceiver(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
     override val result: TennisResult
-        get() = if (game.receiverHasWon()) TennisResult("Win for " + game.receiver, "") else nextResult.result
+        get() = if (game.receiverHasWon()) TennisResult("Win for " + game.receiverName, "") else nextResult.result
 
 }
 
 internal class AdvantageServer(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
     override val result: TennisResult
-        get() = if (game.serverHasAdvantage()) TennisResult("Advantage " + game.server, "") else nextResult.result
+        get() = if (game.serverHasAdvantage()) TennisResult("Advantage " + game.serverName, "") else nextResult.result
 
 }
 
 internal class AdvantageReceiver(private val game: TennisGame1, private val nextResult: ResultProvider) :
     ResultProvider {
     override val result: TennisResult
-        get() = if (game.receiverHasAdvantage()) TennisResult("Advantage " + game.receiver, "") else nextResult.result
+        get() = if (game.receiverHasAdvantage()) TennisResult("Advantage " + game.receiverName, "") else nextResult.result
 
 }
 
