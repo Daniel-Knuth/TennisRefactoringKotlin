@@ -11,7 +11,7 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
     override fun getScore(): String {
         var scoreString = ""
         if (isTie()) {
-            scoreString = pointsToTieString(player1.points)
+            scoreString = getScoreNew()
         } else if (player1.points >= 4 || player2.points >= 4) {
             val minusResult = player1.points - player2.points
             scoreString = if (minusResult == 1)
