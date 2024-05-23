@@ -11,12 +11,10 @@ class TennisGame1(serverName: String, receiverName: String) : TennisGame {
         val provider = DeuceNew(this)
             .check(GameServerNew(this))
         val result: TennisResult = Deuce(
-            this, GameServer(
-                this, GameReceiver(
-                    this, AdvantageServer(
-                        this, AdvantageReceiver(
-                            this, DefaultResult(this)
-                        )
+            this, GameWon(
+                this, AdvantageServer(
+                    this, AdvantageReceiver(
+                        this, DefaultResult(this)
                     )
                 )
             )
@@ -25,7 +23,7 @@ class TennisGame1(serverName: String, receiverName: String) : TennisGame {
     }
 
     internal fun wasWon() = receiverHasWon() || serverHasWon()
-    internal fun winner() = if (serverHasWon()) server else if(receiverHasWon()) receiver else null
+    internal fun winner() = if (serverHasWon()) server else if (receiverHasWon()) receiver else null
 
     internal fun receiverHasAdvantage() = receiver.hasAdvantageOver(server)
 
