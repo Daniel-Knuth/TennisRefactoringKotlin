@@ -4,7 +4,7 @@ class TennisGame1(player1Name: String, player2Name: String) : TennisGame {
     private val player2: Player = Player(name = player2Name)
 
     override fun wonPoint(playerName: String) {
-        playerWith(playerName).points += 1
+        playerWith(playerName)?.winPoint()
     }
 
     override fun getScore(): String = when {
@@ -15,7 +15,10 @@ class TennisGame1(player1Name: String, player2Name: String) : TennisGame {
     }
 
 
-    private fun playerWith(name: String) = mapOf(player1.name to player1, player2.name to player2)[name]!!
+    private fun playerWith(name: String) = mapOf(
+        player1.name to player1,
+        player2.name to player2
+    )[name]
 
     private fun isTie() = player1.points == player2.points
 
