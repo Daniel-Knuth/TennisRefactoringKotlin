@@ -8,26 +8,13 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
             .first() { it.name == playerName }.points += 1
     }
 
-    override fun getScore(): String {
-        var scoreString = ""
-        if (isTie()) {
-            scoreString = getScoreNew()
-        } else if (player1.points >= 4 || player2.points >= 4) {
-            val minusResult = player1.points - player2.points
-            scoreString = getScoreNew()
-        } else {
-            scoreString = "${pointsToString(player1.points)}-${pointsToString(player2.points)}"
-        }
-        return scoreString
-    }
-
-    fun getScoreNew(): String = when {
+    override fun getScore(): String = when {
         isTie() -> pointsToTieString(player1.points)
         player1.hasBeaten(player2) -> "Win for player1"
         player1.hasAdvantageOver(player2) -> "Advantage player1"
         player2.hasBeaten(player1) -> "Win for player2"
         player2.hasAdvantageOver(player1) -> "Advantage player2"
-        else -> ""
+        else -> "${pointsToString(player1.points)}-${pointsToString(player2.points)}"
     }
 
 
