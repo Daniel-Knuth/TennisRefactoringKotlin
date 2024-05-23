@@ -22,25 +22,15 @@ class TennisGame1(serverName: String, receiverName: String) : TennisGame {
         return result.format()
     }
 
-    internal fun receiverHasAdvantage(): Boolean {
-        return receiver.hasAdvantageOver(server)
-    }
+    internal fun receiverHasAdvantage() = receiver.hasAdvantageOver(server)
 
-    internal fun serverHasAdvantage(): Boolean {
-        return server.hasAdvantageOver(receiver)
-    }
+    internal fun serverHasAdvantage() = server.hasAdvantageOver(receiver)
 
-    internal fun receiverHasWon(): Boolean {
-        return receiver.hasBeaten(server)
-    }
+    internal fun receiverHasWon() = receiver.hasBeaten(server)
 
-    internal fun serverHasWon(): Boolean {
-        return server.hasBeaten(receiver)
-    }
+    internal fun serverHasWon() = server.hasBeaten(receiver)
 
-    internal fun isDeuce(): Boolean {
-        return server.points >= 3 && receiver.points >= 3 && server.points == receiver.points
-    }
+    internal fun isDeuce() = server.points >= 3 && receiver.points >= 3 && server.points == receiver.points
 }
 
 
@@ -82,7 +72,10 @@ internal class AdvantageServer(private val game: TennisGame1, private val nextRe
 internal class AdvantageReceiver(private val game: TennisGame1, private val nextResult: ResultProvider) :
     ResultProvider {
     override val result: TennisResult
-        get() = if (game.receiverHasAdvantage()) TennisResult("Advantage " + game.receiver.name, "") else nextResult.result
+        get() = if (game.receiverHasAdvantage()) TennisResult(
+            "Advantage " + game.receiver.name,
+            ""
+        ) else nextResult.result
 
 }
 
