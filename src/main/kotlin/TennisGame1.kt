@@ -8,7 +8,11 @@ class TennisGame1(serverName: String, receiverName: String) : TennisGame {
     }
 
     override fun getScore(): String {
-        val provider = DeuceNew(this).or(GameWonNew(this))
+        val provider = DeuceNew(this)
+            .or(GameWonNew(this))
+            .or(AdvantageNew(this))
+            .or(DefaultResult(this))
+
 
         val result: TennisResult = Deuce(
             this, GameWon(
@@ -135,6 +139,7 @@ internal class Advantage(private val game: TennisGame1, private val nextResult: 
         TODO("Not yet implemented")
     }
 }
+
 
 internal class DefaultResult(private val game: TennisGame1) : ResultProvider {
     override val result: TennisResult
