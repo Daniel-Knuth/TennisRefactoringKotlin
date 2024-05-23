@@ -9,9 +9,9 @@ class TennisGame1(serverName: String, receiverName: String) : TennisGame {
 
     override fun getScore(): String {
         val provider = Deuce(this)
-            .or(GameWon(this))
-            .or(Advantage(this))
-            .or(DefaultResult(this))
+            .orElse(GameWon(this))
+            .orElse(Advantage(this))
+            .orElse(DefaultResult(this))
 
         return provider.result.format()
     }
@@ -39,44 +39,23 @@ internal class TennisResult(var serverScore: String, var receiverScore: String) 
         if ("" == receiverScore) return serverScore
         return if (serverScore == receiverScore) "$serverScore-All" else serverScore + "-" + receiverScore
     }
-}
 
-internal class TennisResultNew(private val game: TennisGame1) {
-    fun format() =
-        when {
-            game.isDeuce() -> "Deuce"
-            game.receiverHasWon() -> "Win for ${game.receiver.name}"
-            game.serverHasWon() -> "Win for ${game.server.name}"
-            game.receiverHasAdvantage() -> "Advantage ${game.receiver.name}"
-            game.serverHasAdvantage() -> "Advantage ${game.server.name}"
-            else -> "${pointsToScore(game.server.points)}-${pointsToScore(game.receiver.points)}"
-        }
+    fun isValid() = this != invalidResult
 
-    private fun pointsToScore(points: Int) = when (points) {
-        0 -> "Love"
-        1 -> "Fifteen"
-        2 -> "Thirty"
-        3 -> "Forty"
-        else -> ""
+    companion object {
+        val invalidResult = TennisResult("", "")
     }
 }
 
 internal interface ResultProvider {
     val result: TennisResult
-    fun or(nextProvider: ResultProvider): ResultProvider
+    fun orElse(nextProvider: ResultProvider): ResultProvider
 }
 
 internal interface ResultProviderNew {
     val result: TennisResult
+    fun providesValidResult(): Boolean
     fun or(nextProvider: ((TennisGame) -> ResultProviderNew)): ResultProviderNew
-}
-
-internal class DeuceNew(private val game: TennisGame1) : ResultProviderNew {
-    override val result: TennisResult
-        get() = if (game.isDeuce()) TennisResult("Deuce", "") else TennisResult("", "")
-
-    override fun or(nextProvider: ((TennisGame) -> ResultProviderNew)): ResultProviderNew =
-        if (result.format().isBlank()) nextProvider.invoke(game) else this
 }
 
 
@@ -84,7 +63,7 @@ internal class Deuce(private val game: TennisGame1) : ResultProvider {
     override val result: TennisResult
         get() = if (game.isDeuce()) TennisResult("Deuce", "") else TennisResult("", "")
 
-    override fun or(nextProvider: ResultProvider): ResultProvider =
+    override fun orElse(nextProvider: ResultProvider): ResultProvider =
         if (result.format().isBlank()) nextProvider else this
 }
 
@@ -92,7 +71,7 @@ internal class GameWon(private val game: TennisGame1) : ResultProvider {
     override val result: TennisResult
         get() = if (game.wasWon()) TennisResult("Win for " + game.winner()!!.name, "") else TennisResult("", "")
 
-    override fun or(nextProvider: ResultProvider): ResultProvider =
+    override fun orElse(nextProvider: ResultProvider): ResultProvider =
         if (result.format().isBlank()) nextProvider else this
 }
 
@@ -104,7 +83,7 @@ internal class Advantage(private val game: TennisGame1) : ResultProvider {
             ""
         ) else TennisResult("", "")
 
-    override fun or(nextProvider: ResultProvider): ResultProvider =
+    override fun orElse(nextProvider: ResultProvider): ResultProvider =
         if (result.format().isBlank()) nextProvider else this
 }
 
@@ -115,7 +94,7 @@ internal class DefaultResult(private val game: TennisGame1) : ResultProvider {
             scores[game.server.points], scores[game.receiver.points]
         )
 
-    override fun or(nextProvider: ResultProvider): ResultProvider {
+    override fun orElse(nextProvider: ResultProvider): ResultProvider {
         TODO("Not yet implemented")
     }
 
