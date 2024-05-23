@@ -60,6 +60,9 @@ internal class TennisResultNew(val game: TennisGame1) {
         else -> ""
     }
 }
+internal interface ResultProviderNew {
+    val result: TennisResultNew
+}
 
 internal interface ResultProvider {
     val result: TennisResult
