@@ -76,9 +76,9 @@ internal interface ResultProvider {
 }
 
 
-internal class DeuceNew(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
+internal class DeuceNew(private val game: TennisGame1) : ResultProvider {
     override val result: TennisResult
-        get() = if (game.isDeuce()) TennisResult("Deuce", "") else nextResult.result
+        get() = if (game.isDeuce()) TennisResult("Deuce", "") else TennisResult("", "")
 
 }
 
