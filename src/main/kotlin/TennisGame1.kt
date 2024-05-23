@@ -21,7 +21,7 @@ class TennisGame1(serverName: String, receiverName: String) : TennisGame {
                 )
             )
         ).result
-        return result.format()
+        return provider.result.format()
     }
 
     internal fun wasWon() = receiverHasWon() || serverHasWon()
