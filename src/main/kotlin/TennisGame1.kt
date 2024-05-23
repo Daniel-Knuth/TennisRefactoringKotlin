@@ -41,6 +41,18 @@ internal class TennisResult(var serverScore: String, var receiverScore: String) 
     }
 }
 
+internal class TennisResultNew(val game: TennisGame1) {
+    fun format() =
+        when {
+            game.isDeuce() -> "Deuce"
+            game.receiverHasWon() -> "Win for ${game.receiver.name}"
+            game.serverHasWon() -> "Win for ${game.server.name}"
+            game.receiverHasAdvantage() -> "Advantage ${game.receiver.name}"
+            game.serverHasAdvantage() -> "Advantage ${game.server.name}"
+            else -> ""
+        }
+}
+
 internal interface ResultProvider {
     val result: TennisResult
 }
