@@ -11,18 +11,13 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
     }
 
     override fun getScore(): String {
-        var score = ""
+        var scoreString = ""
         var tempScore = 0
         if (isDraw()) {
-            score = when (scorePlayer1) {
-                0 -> "Love-All"
-                1 -> "Fifteen-All"
-                2 -> "Thirty-All"
-                else -> "Deuce"
-            }
+            scoreString = scoreToDrawString(scorePlayer1)
         } else if (scorePlayer1 >= 4 || scorePLayer2 >= 4) {
             val minusResult = scorePlayer1 - scorePLayer2
-            score = if (minusResult == 1)
+            scoreString = if (minusResult == 1)
                 "Advantage player1"
             else if (minusResult == -1)
                 "Advantage player2"
@@ -35,18 +30,25 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
                 if (i == 1)
                     tempScore = scorePlayer1
                 else {
-                    score += "-"
+                    scoreString += "-"
                     tempScore = scorePLayer2
                 }
                 when (tempScore) {
-                    0 -> score += "Love"
-                    1 -> score += "Fifteen"
-                    2 -> score += "Thirty"
-                    3 -> score += "Forty"
+                    0 -> scoreString += "Love"
+                    1 -> scoreString += "Fifteen"
+                    2 -> scoreString += "Thirty"
+                    3 -> scoreString += "Forty"
                 }
             }
         }
-        return score
+        return scoreString
+    }
+
+    private fun scoreToDrawString(score:Int) = when (score) {
+        0 -> "Love-All"
+        1 -> "Fifteen-All"
+        2 -> "Thirty-All"
+        else -> "Deuce"
     }
 
     private fun isDraw() = scorePlayer1 == scorePLayer2
