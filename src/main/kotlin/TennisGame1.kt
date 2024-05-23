@@ -20,9 +20,9 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
     override fun getScore(): String {
         var scoreString = ""
         if (isTie()) {
-            scoreString = pointsToTieString(scorePlayer1)
-        } else if (scorePlayer1 >= 4 || scorePLayer2 >= 4) {
-            val minusResult = scorePlayer1 - scorePLayer2
+            scoreString = pointsToTieString(player1.points)
+        } else if (player1.points >= 4 || player2.points >= 4) {
+            val minusResult = player1.points - player2.points
             scoreString = if (minusResult == 1)
                 "Advantage player1"
             else if (minusResult == -1)
@@ -32,7 +32,7 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
             else
                 "Win for player2"
         } else {
-            scoreString = "${pointsToString(scorePlayer1)}-${pointsToString(scorePLayer2)}"
+            scoreString = "${pointsToString(player1.points)}-${pointsToString(player2.points)}"
         }
         return scoreString
     }
@@ -51,5 +51,5 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
         else -> "Deuce"
     }
 
-    private fun isTie() = scorePlayer1 == scorePLayer2
+    private fun isTie() = player1.points == player2.points
 }
