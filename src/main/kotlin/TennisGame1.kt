@@ -65,7 +65,7 @@ internal class Deuce(private val game: TennisGame1) : ResultProvider {
     override val result: TennisResult
         get() = if (game.isDeuce()) TennisResult("Deuce", "") else TennisResult.invalidResult
 
-    override fun providesValidResult() = result!= TennisResult.invalidResult
+    override fun providesValidResult() = result.isValid()
 
     override fun orElse(nextProvider: ResultProvider): ResultProvider =
         if (result.format().isBlank()) nextProvider else this
@@ -75,7 +75,7 @@ internal class GameWon(private val game: TennisGame1) : ResultProvider {
     override val result: TennisResult
         get() = if (game.wasWon()) TennisResult("Win for " + game.winner()!!.name, "")
         else TennisResult.invalidResult
-    override fun providesValidResult() = result!= TennisResult.invalidResult
+    override fun providesValidResult() = result.isValid()
 }
 
 
@@ -85,7 +85,7 @@ internal class Advantage(private val game: TennisGame1) : ResultProvider {
             "Advantage " + game.advantageOwner()!!.name,
             ""
         ) else TennisResult.invalidResult
-    override fun providesValidResult() = result!= TennisResult.invalidResult
+    override fun providesValidResult() = result.isValid()
 }
 
 
@@ -95,7 +95,7 @@ internal class DefaultResult(private val game: TennisGame1) : ResultProvider {
             scores[game.server.points], scores[game.receiver.points]
         )
 
-    override fun providesValidResult() = result!= TennisResult.invalidResult
+    override fun providesValidResult() = result.isValid()
 
     internal companion object {
         private val scores = arrayOf("Love", "Fifteen", "Thirty", "Forty")
