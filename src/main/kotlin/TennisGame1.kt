@@ -12,10 +12,8 @@ class TennisGame1(serverName: String, receiverName: String) : TennisGame {
             .check(GameServerNew(this))
         val result: TennisResult = Deuce(
             this, GameWon(
-                this, AdvantageServer(
-                    this, AdvantageReceiver(
-                        this, DefaultResult(this)
-                    )
+                this, Advantage(
+                    this, DefaultResult(this)
                 )
             )
         ).result
