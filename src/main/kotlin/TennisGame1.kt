@@ -8,6 +8,7 @@ class TennisGame1(serverName: String, receiverName: String) : TennisGame {
     }
 
     override fun getScore(): String {
+
         val result: TennisResult = Deuce(
             this, GameServer(
                 this, GameReceiver(
@@ -41,7 +42,7 @@ internal class TennisResult(var serverScore: String, var receiverScore: String) 
     }
 }
 
-internal class TennisResultNew(val game: TennisGame1) {
+internal class TennisResultNew(private val game: TennisGame1) {
     fun format() =
         when {
             game.isDeuce() -> "Deuce"
@@ -60,12 +61,21 @@ internal class TennisResultNew(val game: TennisGame1) {
         else -> ""
     }
 }
+
 internal interface ResultProviderNew {
-    val result: TennisResultNew
+    val result: String
+    fun check(nextProvider: ResultProviderNew): ResultProviderNew =
+        if (result.isBlank()) nextProvider else this
 }
+
 
 internal interface ResultProvider {
     val result: TennisResult
+}
+
+internal class DeuceNew(private val game: TennisGame1) : ResultProviderNew {
+    override val result: String
+        get() = if (game.isDeuce()) TennisResultNew(game).format() else ""
 }
 
 internal class Deuce(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
@@ -73,6 +83,8 @@ internal class Deuce(private val game: TennisGame1, private val nextResult: Resu
         get() = if (game.isDeuce()) TennisResult("Deuce", "") else nextResult.result
 
 }
+
+
 
 internal class GameServer(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
     override val result: TennisResult
