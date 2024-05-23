@@ -14,14 +14,7 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
             scoreString = getScoreNew()
         } else if (player1.points >= 4 || player2.points >= 4) {
             val minusResult = player1.points - player2.points
-            scoreString = if (minusResult == 1)
-                "Advantage player1"
-            else if (minusResult == -1)
-                "Advantage player2"
-            else if (minusResult >= 2)
-                "Win for player1"
-            else
-                "Win for player2"
+            scoreString = getScoreNew()
         } else {
             scoreString = "${pointsToString(player1.points)}-${pointsToString(player2.points)}"
         }
