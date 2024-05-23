@@ -13,7 +13,7 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
     override fun getScore(): String {
         var score = ""
         var tempScore = 0
-        if (scorePlayer1 == scorePLayer2) {
+        if (isDraw()) {
             when (scorePlayer1) {
                 0 -> score = "Love-All"
                 1 -> score = "Fifteen-All"
@@ -48,4 +48,6 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
         }
         return score
     }
+
+    private fun isDraw() = scorePlayer1 == scorePLayer2
 }
