@@ -1,59 +1,98 @@
-class TennisGame1(player1Name: String, player2Name: String) : TennisGame {
+class TennisGame1(val server: String, val receiver: String) : TennisGame {
 
-    private val player1: Player = Player(name = player1Name)
-    private val player2: Player = Player(name = player2Name)
+    internal var serverScore = 0
+    internal var receiverScore = 0
 
     override fun wonPoint(playerName: String) {
-        playerWith(playerName)?.winPoint()
+        if (server == playerName) serverScore += 1 else receiverScore += 1
     }
 
-    override fun getScore(): String = when {
-        isTie() -> tieString()
-        hasWinner() -> winString()
-        hasAdvantageOwner() -> advantageString()
-        else -> scoreString()
+    override fun getScore(): String {
+        val result: TennisResult = Deuce(
+            this, GameServer(
+                this, GameReceiver(
+                    this, AdvantageServer(
+                        this, AdvantageReceiver(
+                            this, DefaultResult(this)
+                        )
+                    )
+                )
+            )
+        ).result
+        return result.format()
     }
 
-
-    private fun playerWith(name: String) = mapOf(
-        player1.name to player1,
-        player2.name to player2
-    )[name]
-
-    private fun isTie() = player1.points == player2.points
-
-    private fun tieString() = when {
-        player1.points < 3 -> "${pointsToString(player1.points)}-All"
-        else -> "Deuce"
+    internal fun receiverHasAdvantage(): Boolean {
+        return receiverScore >= 4 && receiverScore - serverScore == 1
     }
 
-    private fun pointsToString(points: Int) = when (points) {
-        0 -> "Love"
-        1 -> "Fifteen"
-        2 -> "Thirty"
-        3 -> "Forty"
-        else -> ""
+    internal fun serverHasAdvantage(): Boolean {
+        return serverScore >= 4 && serverScore - receiverScore == 1
     }
 
-    private fun hasWinner() = winner() != null
-
-    private fun winString() = if (hasWinner()) "Win for ${winner()!!.name}" else ""
-
-    private fun winner(): Player? = when {
-        (player1.hasBeaten(player2)) -> player1
-        (player2.hasBeaten(player1)) -> player2
-        else -> null
+    internal fun receiverHasWon(): Boolean {
+        return receiverScore >= 4 && receiverScore - serverScore >= 2
     }
 
-    private fun hasAdvantageOwner() = advantageOwner() != null
-
-    private fun advantageString() = if (hasAdvantageOwner()) "Advantage ${advantageOwner()!!.name}" else ""
-
-    private fun advantageOwner() = when {
-        player1.hasAdvantageOver(player2) -> player1
-        player2.hasAdvantageOver(player1) -> player2
-        else -> null
+    internal fun serverHasWon(): Boolean {
+        return serverScore >= 4 && serverScore - receiverScore >= 2
     }
 
-    private fun scoreString() = "${pointsToString(player1.points)}-${pointsToString(player2.points)}"
+    internal fun isDeuce(): Boolean {
+        return serverScore >= 3 && receiverScore >= 3 && serverScore == receiverScore
+    }
+}
+
+
+internal class TennisResult(var serverScore: String, var receiverScore: String) {
+    fun format(): String {
+        if ("" == receiverScore) return serverScore
+        return if (serverScore == receiverScore) "$serverScore-All" else serverScore + "-" + receiverScore
+    }
+}
+
+internal interface ResultProvider {
+    val result: TennisResult
+}
+
+internal class Deuce(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
+    override val result: TennisResult
+        get() = if (game.isDeuce()) TennisResult("Deuce", "") else nextResult.result
+
+}
+
+internal class GameServer(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
+    override val result: TennisResult
+        get() = if (game.serverHasWon()) TennisResult("Win for " + game.server, "") else nextResult.result
+
+}
+
+internal class GameReceiver(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
+    override val result: TennisResult
+        get() = if (game.receiverHasWon()) TennisResult("Win for " + game.receiver, "") else nextResult.result
+
+}
+
+internal class AdvantageServer(private val game: TennisGame1, private val nextResult: ResultProvider) : ResultProvider {
+    override val result: TennisResult
+        get() = if (game.serverHasAdvantage()) TennisResult("Advantage " + game.server, "") else nextResult.result
+
+}
+
+internal class AdvantageReceiver(private val game: TennisGame1, private val nextResult: ResultProvider) :
+    ResultProvider {
+    override val result: TennisResult
+        get() = if (game.receiverHasAdvantage()) TennisResult("Advantage " + game.receiver, "") else nextResult.result
+
+}
+
+internal class DefaultResult(private val game: TennisGame1) : ResultProvider {
+    override val result: TennisResult
+        get() = TennisResult(
+            scores[game.serverScore], scores[game.receiverScore]
+        )
+
+    internal companion object {
+        private val scores = arrayOf("Love", "Fifteen", "Thirty", "Forty")
+    }
 }
