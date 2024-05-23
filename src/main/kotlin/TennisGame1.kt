@@ -49,8 +49,16 @@ internal class TennisResultNew(val game: TennisGame1) {
             game.serverHasWon() -> "Win for ${game.server.name}"
             game.receiverHasAdvantage() -> "Advantage ${game.receiver.name}"
             game.serverHasAdvantage() -> "Advantage ${game.server.name}"
-            else -> ""
+            else -> "${pointsToScore(game.server.points)}-${pointsToScore(game.receiver.points)}"
         }
+
+    private fun pointsToScore(points: Int) = when (points) {
+        0 -> "Love"
+        1 -> "Fifteen"
+        2 -> "Thirty"
+        3 -> "Forty"
+        else -> ""
+    }
 }
 
 internal interface ResultProvider {
