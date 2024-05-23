@@ -4,7 +4,8 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
     private val player2: Player = Player(name = player2Name)
 
     override fun wonPoint(playerName: String) {
-        listOf(player1,player2).first(){it.name==playerName}.points += 1
+        listOf(player1, player2)
+            .first() { it.name == playerName }.points += 1
     }
 
     override fun getScore(): String {
