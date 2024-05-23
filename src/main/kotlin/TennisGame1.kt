@@ -22,22 +22,22 @@ class TennisGame1(serverName: String, receiverName: String) : TennisGame {
     internal fun hasAdvantageOwner() = receiverHasAdvantage() || serverHasAdvantage()
     internal fun advantageOwner() = if (serverHasAdvantage()) server else if (receiverHasAdvantage()) receiver else null
 
-    internal fun receiverHasAdvantage() = receiver.hasAdvantageOver(server)
+    private fun receiverHasAdvantage() = receiver.hasAdvantageOver(server)
 
-    internal fun serverHasAdvantage() = server.hasAdvantageOver(receiver)
+    private fun serverHasAdvantage() = server.hasAdvantageOver(receiver)
 
-    internal fun receiverHasWon() = receiver.hasBeaten(server)
+    private fun receiverHasWon() = receiver.hasBeaten(server)
 
-    internal fun serverHasWon() = server.hasBeaten(receiver)
+    private fun serverHasWon() = server.hasBeaten(receiver)
 
     internal fun isDeuce() = server.points >= 3 && receiver.points >= 3 && server.points == receiver.points
 }
 
 
-internal class TennisResult(var serverScore: String, var receiverScore: String) {
+internal class TennisResult(private var serverScore: String, private var receiverScore: String) {
     fun format(): String {
         if ("" == receiverScore) return serverScore
-        return if (serverScore == receiverScore) "$serverScore-All" else serverScore + "-" + receiverScore
+        return if (serverScore == receiverScore) "$serverScore-All" else "$serverScore-$receiverScore"
     }
 
     fun isValid() = this != invalidResult
@@ -54,27 +54,18 @@ internal interface ResultProvider {
         if (providesValidResult()) this else nextProvider
 }
 
-internal interface ResultProviderNew {
-    val result: TennisResult
-    fun providesValidResult(): Boolean
-    fun or(nextProvider: ((TennisGame) -> ResultProviderNew)): ResultProviderNew
-}
-
-
 internal class Deuce(private val game: TennisGame1) : ResultProvider {
     override val result: TennisResult
         get() = if (game.isDeuce()) TennisResult("Deuce", "") else TennisResult.invalidResult
 
     override fun providesValidResult() = result.isValid()
-
-    override fun orElse(nextProvider: ResultProvider): ResultProvider =
-        if (result.format().isBlank()) nextProvider else this
 }
 
 internal class GameWon(private val game: TennisGame1) : ResultProvider {
     override val result: TennisResult
         get() = if (game.wasWon()) TennisResult("Win for " + game.winner()!!.name, "")
         else TennisResult.invalidResult
+
     override fun providesValidResult() = result.isValid()
 }
 
@@ -85,6 +76,7 @@ internal class Advantage(private val game: TennisGame1) : ResultProvider {
             "Advantage " + game.advantageOwner()!!.name,
             ""
         ) else TennisResult.invalidResult
+
     override fun providesValidResult() = result.isValid()
 }
 
