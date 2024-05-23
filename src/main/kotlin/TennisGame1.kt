@@ -12,7 +12,6 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
 
     override fun getScore(): String {
         var scoreString = ""
-        var tempScore = 0
         if (isTie()) {
             scoreString = pointsToTieString(scorePlayer1)
         } else if (scorePlayer1 >= 4 || scorePLayer2 >= 4) {
@@ -31,6 +30,8 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
         return scoreString
     }
 
+
+
     private fun pointsToString(points: Int) = when (points) {
         0 -> "Love"
         1 -> "Fifteen"
@@ -38,7 +39,6 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
         3 -> "Forty"
         else -> ""
     }
-
 
     private fun pointsToTieString(points: Int) = when {
         points < 3 -> "${pointsToString(points)}-All"
