@@ -17,9 +17,11 @@ class TennisGame1(serverName: String, receiverName: String) : TennisGame {
     }
 
     internal fun wasWon() = receiverHasWon() || serverHasWon()
+
     internal fun winner() = if (serverHasWon()) server else if (receiverHasWon()) receiver else null
 
     internal fun hasAdvantageOwner() = receiverHasAdvantage() || serverHasAdvantage()
+
     internal fun advantageOwner() = if (serverHasAdvantage()) server else if (receiverHasAdvantage()) receiver else null
 
     private fun receiverHasAdvantage() = receiver.hasAdvantageOver(server)
@@ -34,7 +36,7 @@ class TennisGame1(serverName: String, receiverName: String) : TennisGame {
 }
 
 
-internal class TennisResult(private var serverScore: String, private var receiverScore: String="") {
+internal class TennisResult(private var serverScore: String, private var receiverScore: String = "") {
     fun format(): String {
         if ("" == receiverScore) return serverScore
         return if (serverScore == receiverScore) "$serverScore-All" else "$serverScore-$receiverScore"
@@ -43,7 +45,7 @@ internal class TennisResult(private var serverScore: String, private var receive
     fun isValid() = this != invalidResult
 
     companion object {
-        val invalidResult = TennisResult("invalid","invalid")
+        val invalidResult = TennisResult("invalid", "invalid")
     }
 }
 
@@ -73,7 +75,8 @@ internal class GameWon(private val game: TennisGame1) : ResultProvider {
 internal class Advantage(private val game: TennisGame1) : ResultProvider {
     override val result: TennisResult
         get() = if (game.hasAdvantageOwner()) TennisResult(
-            "Advantage " + game.advantageOwner()!!.name)
+            "Advantage " + game.advantageOwner()!!.name
+        )
         else TennisResult.invalidResult
 
     override fun providesValidResult() = result.isValid()
